@@ -35,22 +35,15 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     ListView listView;
-
     Button newbutton;
     private String[] items;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         listView = findViewById(R.id.listview_id);
-
-
         runtimepermission();
-
-
 //        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 //            @Override
 //            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -60,10 +53,7 @@ public class MainActivity extends AppCompatActivity {
 //
 //            }
 //        });
-
-
     }
-
 
     public void runtimepermission() {
 
@@ -96,32 +86,24 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.menuSearch_id) {
-
             Toast.makeText(this, "Setting", Toast.LENGTH_SHORT).show();
-        }else if (item.getItemId()==R.id.menufeedBack){
-
-            Intent intent= new Intent(MainActivity.this,feedbackActivity.class);
+        } else if (item.getItemId() == R.id.menufeedBack) {
+            Intent intent = new Intent(MainActivity.this, feedbackActivity.class);
             startActivity(intent);
-
         }
         return super.onOptionsItemSelected(item);
     }
 
-
     public ArrayList<File> findsong(File file) {
         ArrayList<File> arrayList = new ArrayList<>();
-
         File[] files = file.listFiles();
         for (File singlefile : files) {
-
             try {
                 if (singlefile.isDirectory() && !singlefile.isHidden()) {
                     ArrayList<File> innerFiles = findsong(singlefile);
                     arrayList.addAll(innerFiles);
                 } else {
-
                     if (singlefile.getName().endsWith(".mp3") || singlefile.getName().endsWith(".wav")) {
-
                         arrayList.add(singlefile);
                     }
                 }
@@ -129,18 +111,14 @@ public class MainActivity extends AppCompatActivity {
                 Log.e("Exception", "findsong: " + e.getMessage());
                 e.printStackTrace();
             }
-
         }
-
         return arrayList;
-
     }
 
-
     ArrayList<File> mysong;
-    public void displaysongs() {
 
-      //  File f = Environment.getExternalStorageDirectory();
+    public void displaysongs() {
+        //  File f = Environment.getExternalStorageDirectory();
 
         Runnable runnable = new Runnable() {
             @Override
@@ -150,39 +128,31 @@ public class MainActivity extends AppCompatActivity {
                 for (int i = 0; i < mysong.size(); i++) {
                     items[i] = mysong.get(i).getName().toString().replace(".mp3", "").replace(".wav", "");
                 }
-
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         // ArrayAdapter<String> myadepter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,items);
                         CustomAdapter myadapter = new CustomAdapter();
                         listView.setAdapter(myadapter);
-
                     }
                 });
             }
         };
-
-        Thread t  = new Thread(runnable);
+        Thread t = new Thread(runnable);
         t.start();
-
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String Sname = (String) listView.getItemAtPosition(position);
-
                 startActivity(new Intent(getApplicationContext(), PlayerActivity2.class)
                         .putExtra("songs", mysong)
                         .putExtra("songname", Sname)
                         .putExtra("pos", position));
             }
         });
-
-
     }
 
     class CustomAdapter extends BaseAdapter {
-
 
         @Override
         public int getCount() {
@@ -201,14 +171,10 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-
-
             View myView = getLayoutInflater().inflate(R.layout.sample_layout, null);
             TextView textView = myView.findViewById(R.id.sampletextView_id);
             textView.setSelected(true);
             textView.setText(items[position]);
-
-
             return myView;
         }
     }
